@@ -1,0 +1,6 @@
+$env:GOMIPS="softfloat";
+$env:CGO_ENABLED=0;
+$env:GOOS="linux";
+$env:GOARCH="mips";
+go build main.go;
+./upx.exe main;
