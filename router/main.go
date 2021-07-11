@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net"
 	"time"
+	"gopkg.in/gcfg.v1"
 )
  
 var (
@@ -24,8 +25,21 @@ var (
 var Dch chan bool
 var Rch chan []byte
 var Wch chan []byte
- 
+
+var Server string
+
 func main() {
+	config := struct {
+		Section struct {
+        	Server    string
+		}
+    }{}
+    err := gcfg.ReadFileInto(&config, "./remote.conf")
+    if err != nil {
+        fmt.Println("Failed to parse config file: %s", err)
+    }
+    Server = config.Section.Server
+
 	Dch = make(chan bool)
 	Rch = make(chan []byte)
 	Wch = make(chan []byte)
@@ -49,7 +63,7 @@ func main() {
 }
 
 func connect() bool {
-	addr, _ := net.ResolveTCPAddr("tcp", "106.15.186.71:5200")
+	addr, _ := net.ResolveTCPAddr("tcp", Server)
 	conn, err := net.DialTCP("tcp", nil, addr)
 	if err != nil {
 		fmt.Println("连接服务端失败:", err.Error())
