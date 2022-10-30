@@ -1,0 +1,8 @@
+#!/bin/sh 
+START=99
+STOP=15
+
+start(){
+  rm -f /root/wakeRecord
+  nohup /root/remoteWakeClient &2>1 > /root/wakeRecord &
+}

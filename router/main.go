@@ -1,4 +1,4 @@
-package main
+package router
  
 // golang实现带有心跳检测的tcp长连接
 // server
@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net"
 	"time"
-	"gopkg.in/gcfg.v1"
 )
  
 var (
@@ -19,7 +18,6 @@ var (
  
 	Req  byte = 5 // 5 --- cs send data
 	Res  byte = 6 // 6 --- cs send ack
-	magicPkg []byte
 )
  
 var Dch chan bool
@@ -28,18 +26,19 @@ var Wch chan []byte
 
 var Server string
 
-func main() {
-	config := struct {
-		Section struct {
-        	Server    string
-		}
-    }{}
-    err := gcfg.ReadFileInto(&config, "./remote.conf")
-    if err != nil {
-        fmt.Printf("Failed to parse config file: %s", err)
-    }
-    Server = config.Section.Server
-
+func HeartBeatRoute(server string ) {
+	// config := struct {
+	// 	Section struct {
+    //     	Server    string
+	// 	}
+    // }{}
+    // err := gcfg.ReadFileInto(&config, "./remote.conf")
+    // if err != nil {
+    //     fmt.Printf("Failed to parse config file: %s", err)
+    // }
+    // Server = config.Section.Server
+	// Server = ""
+	Server = server
 	Dch = make(chan bool)
 	Rch = make(chan []byte)
 	Wch = make(chan []byte)
@@ -60,6 +59,10 @@ func main() {
 			break
 		}
 	}
+}
+
+func TestMoudle(){
+	fmt.Println("test mouble success")
 }
 
 func connect() bool {
